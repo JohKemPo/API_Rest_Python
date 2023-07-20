@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="" width="220px">
+  <img src="https://github.com/JohKemPo/API_Rest_Python/assets/74382074/dba0e968-16d2-47f6-ac4e-1c201998fc8c" width="220px">
 </div>
 
 <h1 align="center" id="head"><b>REST API WITH FLASK</b></h1>
