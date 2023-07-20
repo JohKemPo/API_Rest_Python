@@ -79,7 +79,6 @@
 <h2 id="team"><b>TEAM</b></h2><br>
 
 <div align="center">
-
 |     Desenvolvedor              |           GitHub             |       LinkedIn     |
 |--------------------------------|------------------------------|--------------------|
 |👤 João Vitor Moraes            |https://github.com/JohKemPo   |https://www.linkedin.com/in/joao-vitor-de-moraes/|
