@@ -2,7 +2,7 @@
   <img src="https://github.com/JohKemPo/API_Rest_Python/assets/74382074/dba0e968-16d2-47f6-ac4e-1c201998fc8c" width="220px">
 </div>
 
-<h1 align="center" id="head"><b>REST API WITH FLASK</b></h1>
+<h1 align="center" id="head"><b>REST API WITH FLASK [EM PRODUÇÃO]</b></h1>
 
 <p align="center"><b> - LEARN TO BUILD RESTful APIs WITH PYTHON AND FLASK -</b></p>
 <br>
