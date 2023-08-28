@@ -78,7 +78,7 @@ def create_task():
     tasks.append(new_task)
     return jsonify({"message": "Task created successfully"})
 
-# Implemente as rotas de atualização e exclusão de tarefas aqui
+# Falta implementar as rotas de atualização e exclusão de tarefas aqui
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
 <h3>Upload e Download de Arquivos</h3>
 
-<p align="justify">&emsp;Vamos adicionar suporte para upload e download de arquivos, como por exemplo, imagens:</p>
+<p align="justify">&emsp;Upload e download de arquivos, como por exemplo, imagens:</p>
 
 ```python
 from flask import Flask, request, send_from_directory
@@ -203,17 +203,17 @@ if __name__ == '__main__':
 
 <h3>Como Usar Decorators e Wrappers</h3>
 
-<p align="justify">&emsp;Para criar seus próprios decoradores e wrappers, siga estas etapas:</p>
+1. Para criar seus próprios decoradores e wrappers, siga estas etapas:
 
-<p align="justify">&emsp;Defina sua função de decorator ou wrapper. Isso pode ser uma função comum que envolve ou modifica outra função.</p>
+1. Defina sua função de decorator ou wrapper. Isso pode ser uma função comum que envolve ou modifica outra função.
 
-<p align="justify">&emsp;Se você estiver criando um decorator, normalmente usará a sintaxe @nome_do_decorator acima da função que deseja decorar. Se estiver usando um wrapper, você pode usar o wrapper diretamente para envolver a função.</p>
+1. Se você estiver criando um decorator, normalmente usará a sintaxe @nome_do_decorator acima da função que deseja decorar. Se estiver usando um wrapper, você pode usar o wrapper diretamente para envolver a função.
 
-<p align="justify">&emsp;Certifique-se de usar functools.wraps(func) quando criar um wrapper para preservar o nome e a documentação da função original.</p>
+1. Certifique-se de usar functools.wraps(func) quando criar um wrapper para preservar o nome e a documentação da função original.
 
-<p align="justify">&emsp;Personalize a lógica dentro do decorator ou wrapper conforme necessário para adicionar a funcionalidade desejada.</p>
+1. Personalize a lógica dentro do decorator ou wrapper conforme necessário para adicionar a funcionalidade desejada.
 
-<p align="justify">&emsp;Decoradores e wrappers permitem modularizar e reutilizar funcionalidades em seus aplicativos. Eles ajudam a manter o código organizado, legível e permitem adicionar ou remover recursos sem afetar drasticamente a estrutura existente.</p>
+1. Decoradores e wrappers permitem modularizar e reutilizar funcionalidades em seus aplicativos. Eles ajudam a manter o código organizado, legível e permitem adicionar ou remover recursos sem afetar drasticamente a estrutura existente.
 
 <h3>Templates e Renderização</h3>
 
@@ -269,7 +269,8 @@ pip install Flask-WTF Flask-Login Flask-Mail
 
 
 
-Estrutura de Projeto<>
+<h3>Estrutura de Projeto</h3>
+
 
 <p align="justify">&emsp;À medida que seu aplicativo cresce, é útil organizar seus arquivos em uma estrutura de projeto. Um exemplo simples pode ser:
 
@@ -284,17 +285,17 @@ myapp/
 
 <p align="justify">&emsp;Este guia forneceu uma introdução básica ao desenvolvimento web com Flask, abrangendo endpoints CRUD, upload e download de arquivos, uso de decorators e wrappers. A partir daqui, você pode explorar mais recursos e aprofundar seus conhecimentos para criar aplicativos web mais complexos e completos com o Flask. Lembre-se de consultar a documentação oficial do Flask para mais informações detalhadas.</p>
 
-Recursos Adicionais
+<h3>Recursos Adicionais</h3>
 
 Além disso, para aprofundar seus conhecimentos, considere explorar:
 
-Testes Unitários: Aprenda a testar seu aplicativo usando bibliotecas como unittest ou pytest.
-Autenticação e Autorização: Implemente autenticação de usuário e controle de acesso para proteger rotas sensíveis.
-API RESTful: Aprenda como criar uma API RESTful completa usando o Flask.
-Blueprints: Organize seu aplicativo em módulos reutilizáveis chamados blueprints.
-Segurança: Explore práticas recomendadas para proteger seu aplicativo contra vulnerabilidades comuns.
+- Testes Unitários: Aprenda a testar seu aplicativo usando bibliotecas como unittest ou pytest.
+- Autenticação e Autorização: Implemente autenticação de usuário e controle de acesso para proteger rotas sensíveis.
+- API RESTful: Aprenda como criar uma API RESTful completa usando o Flask.
+- Blueprints: Organize seu aplicativo em módulos reutilizáveis chamados blueprints.
+- Segurança: Explore práticas recomendadas para proteger seu aplicativo contra vulnerabilidades comuns.
 
-Diferença entre API REST e RESTFULL:
+<h2>Diferença entre API REST e RESTFULL</h2>
 
 "API REST" e "API RESTful" são termos frequentemente usados para se referir a APIs que seguem os princípios da arquitetura REST (Representational State Transfer). Embora esses termos sejam muitas vezes usados de forma intercambiável, eles têm significados ligeiramente diferentes.
 
