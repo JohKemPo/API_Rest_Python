@@ -14,17 +14,20 @@
 <h2 align="center">S U M M A R Y</h2>
 <br>
 
-1. [Introduction to RESTful APIs](#intro)
-2. [Setting Up Flask](#setup)
-3. [Creating Endpoints](#endpoints)
-4. [Handling Data](#data)
-5. [Authentication and Security](#auth)
-6. [Best Practices](#best-practices)
-7. [Appendix](#appendix)
+1. [Pré-requisitos](#pre)
+1. [Introdução a RESTful APIs](#intro)
+2. [Configurações iniciais](#setup)
+    1. [Endpoints de CRUD](#endpoints)
+3. [Recursos Adicionais](#recursos)
+4. [Decorators e Wrappers](#decoratorsWrappers)
+    1. [Como usar Decorators e Wrapper](#useDecoWrapper)
+5. [Diferença entre API RESTful e REST](#teo)
+1. [Criando ambientes virtuais](#env)
+
 
 <br>
 
-<h2>Pré-requisitos</h2>
+<h2 id="pre">Pré-requisitos</h2>
 
 <p align="justify">&emsp;Antes de começar, certifique-se de ter o Python instalado. Você pode verificar a versão do Python instalada digitando o seguinte comando no terminal:</p>
 
@@ -38,7 +41,29 @@ python --version
 pip install Flask
 ```
 
-<h2>Criando uma Aplicações Flask Básica</h2>
+<h2 id="intro">Introdução a RESTful APIs</h2>
+<p align="justify">&emsp; As APIs RESTful (Representational State Transfer) são uma abordagem popular para criar interfaces de programação de aplicativos que facilitam a comunicação entre sistemas distribuídos. Essas APIs adotam princípios arquiteturais que promovem a escalabilidade, a simplicidade e a interoperabilidade.</p>
+
+<p align="justify">&emsp; Uma API RESTful é projetada para se assemelhar à estrutura da web, utilizando os métodos HTTP (GET, POST, PUT, DELETE, etc.) para manipular recursos. Essa abordagem oferece uma maneira uniforme de interagir com esses recursos, tornando a API fácil de entender e usar.</p>
+
+<h3>As principais características de uma API RESTful incluem:</h3>
+<br>
+
+1. <b>Estado do Cliente e Stateless:</b> Cada solicitação do cliente para o servidor deve conter todas as informações necessárias para compreender e processar a solicitação. O servidor não mantém informações de estado entre solicitações. Isso promove a escalabilidade e a confiabilidade da API.
+
+1. <b>Recursos e URIs:</b> Os recursos, que representam entidades do mundo real, são manipulados através de URLs (Uniform Resource Identifiers). As URIs devem ser consistentes e intuitivas para facilitar a navegação e a interação com a API.
+
+1. <b>Métodos HTTP:</b> As operações de manipulação de recursos (criação, leitura, atualização, exclusão) são realizadas usando os métodos padrão do protocolo HTTP, como GET, POST, PUT e DELETE. Cada método possui um propósito específico.
+
+1. <b>Representações:</b> Os recursos são representados em diferentes formatos, como JSON, XML ou HTML. As APIs RESTful fornecem uma representação clara dos dados, permitindo a fácil interpretação e processamento.
+
+1. <b>Códigos de Status HTTP:</b> As respostas do servidor incluem códigos de status HTTP que indicam o resultado da solicitação, como "200 OK" para sucesso, "404 Not Found" para recurso não encontrado, entre outros.
+
+1. <b>Hypermedia (HATEOAS):</b> É um conceito que indica que as respostas da API devem conter links para outros recursos relacionados. Isso permite que os clientes naveguem pela API de maneira autônoma, sem depender de documentação externa.
+
+1. <b>Interface Uniforme:</b> Uma API RESTful segue uma interface uniforme, o que significa que os princípios subjacentes são consistentes em toda a API, facilitando a previsibilidade e a compreensão.
+
+<h2 id="setup">Criando uma Aplicações Flask Básica</h2>
 
 <p align="justify">&emsp;Vamos começar criando uma aplicação Flask simples que responde a uma rota básica:</p>
 
@@ -52,12 +77,12 @@ def hello():
     return "Olá, Flask!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
 <p align="justify">&emsp;Navegue até <a href="http://localhost:5000"><u>http://localhost:5000</u></a> no seu navegador para ver a mensagem "Olá, Flask!".</p>
 
-<h3>Endpoints de CRUD</h3>
+<h3 id="endpoints">Endpoints de CRUD</h3>
 
 <p align="justify">&emsp;Agora, vamos criar endpoints para realizar operações CRUD (Create, Read, Update, Delete) em um recurso, por exemplo, uma lista de tarefas:</p>
 
@@ -68,20 +93,44 @@ app = Flask(__name__)
 
 tasks = []
 
-@app.route('/tasks', methods=['GET'])
-def get_tasks():
-    return jsonify(tasks)
-
+# Criação de tarefa
 @app.route('/tasks', methods=['POST'])
 def create_task():
     new_task = request.json
     tasks.append(new_task)
     return jsonify({"message": "Task created successfully"})
 
-# Falta implementar as rotas de atualização e exclusão de tarefas aqui
+# Listagem de todas as tarefas
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify(tasks)
+
+# Leitura de tarefa por ID
+@app.route('/tasks/<int:task_id>', methods=['GET'])
+def get_task(task_id):
+    if task_id < len(tasks):
+        return jsonify(tasks[task_id])
+    return jsonify({"message": "Task not found"}), 404
+
+# Atualização de tarefa por ID
+@app.route('/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    if task_id < len(tasks):
+        updated_task = request.json
+        tasks[task_id] = updated_task
+        return jsonify({"message": "Task updated successfully"})
+    return jsonify({"message": "Task not found"}), 404
+
+# Exclusão de tarefa por ID
+@app.route('/tasks/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    if task_id < len(tasks):
+        tasks.pop(task_id)
+        return jsonify({"message": "Task deleted successfully"})
+    return jsonify({"message": "Task not found"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
 <h3>Upload e Download de Arquivos</h3>
@@ -117,35 +166,15 @@ def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
-<h3>Decorators e Wrappers</h3>
+![Uso do postman para upload de arquivos](images/image.png)
+<i>Uso de postman para upload de arquivos</i><br>
+
+<h3 id="decoratorsWrappers">Decorators e Wrappers</h3>
 
 <p align="justify">&emsp;O Flask permite o uso de decoradores e wrappers para adicionar funcionalidades a funções específicas. Vamos criar um exemplo de autenticação simples:</p>
-
-```python
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
-def requires_auth(func):
-    def wrapper(*args, **kwargs):
-        auth_token = request.headers.get('Authorization')
-        if auth_token == 'mysecrettoken':
-            return func(*args, **kwargs)
-        else:
-            return jsonify({"message": "Authentication failed"}), 401
-    return wrapper
-
-@app.route('/protected')
-@requires_auth
-def protected_route():
-    return jsonify({"message": "This is a protected route"})
-
-if __name__ == '__main__':
-    app.run(debug=True)
-```
 
 <h3>Decorators</h3>
 
@@ -169,10 +198,18 @@ def hello():
     return "Hello, Flask!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
 <p align="justify">&emsp;Neste exemplo, o decorator my_decorator envolve a função hello(), imprimindo mensagens antes e depois da chamada da função.</p>
+
+<p align="justify">&emsp;No exemplo, o wrapper requires_auth verifica a autenticação antes de permitir que a função original seja executada. A função wraps é usada para garantir que a função original (no caso, protected_route()) mantenha seu nome e documentação.</p>
+
+<h3>Wrappers</h3>
+
+<p align="justify">&emsp;Wrappers são funções intermediárias que envolvem ou "embrulham" outras funções. Eles são frequentemente usados em conjunto com decoradores para adicionar comportamentos extras. No contexto do Flask, os wrappers são usados para implementar verificações, autenticação, manipulação de erros e muito mais.</p>
+
+<p align="justify">&emsp;Aqui está um exemplo de um wrapper que verifica a autenticação antes de permitir o acesso a uma rota:</p>
 
 ```python
 from functools import wraps
@@ -196,14 +233,13 @@ def protected_route():
     return jsonify({"message": "This is a protected route"})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
-<p align="justify">&emsp;No exemplo acima, o wrapper requires_auth verifica a autenticação antes de permitir que a função original seja executada. A função wraps é usada para garantir que a função original (no caso, protected_route()) mantenha seu nome e documentação.</p>
 
-<h3>Como Usar Decorators e Wrappers</h3>
+<h3 id="useDecoWrapper">Como Usar Decorators e Wrappers</h3>
 
-1. Para criar seus próprios decoradores e wrappers, siga estas etapas:
+Para criar seus próprios decoradores e wrappers, siga estas etapas:
 
 1. Defina sua função de decorator ou wrapper. Isso pode ser uma função comum que envolve ou modifica outra função.
 
@@ -215,31 +251,8 @@ if __name__ == '__main__':
 
 1. Decoradores e wrappers permitem modularizar e reutilizar funcionalidades em seus aplicativos. Eles ajudam a manter o código organizado, legível e permitem adicionar ou remover recursos sem afetar drasticamente a estrutura existente.
 
-<h3>Templates e Renderização</h3>
 
-<p align="justify">&emsp;O Flask suporta a renderização de templates HTML usando mecanismos como Jinja2. Isso permite criar páginas dinâmicas combinando dados com templates predefinidos.</p>
-
-<h3>Wrappers</h3>
-
-<p align="justify">&emsp;Wrappers são funções intermediárias que envolvem ou "embrulham" outras funções. Eles são frequentemente usados em conjunto com decoradores para adicionar comportamentos extras. No contexto do Flask, os wrappers são usados para implementar verificações, autenticação, manipulação de erros e muito mais.</p>
-
-<p align="justify">&emsp;Aqui está um exemplo de um wrapper que verifica a autenticação antes de permitir o acesso a uma rota:</p>
-
-```python
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    data = {"name": "Flask User"}
-    return render_template('index.html', data=data)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-```
-
-<h3>Banco de Dados</h3>
+<h3>Banco de Dados [EXTRA]</h3>
 
 <p align="justify">&emsp;Integrar um banco de dados ao seu aplicativo é fundamental. O Flask não possui um ORM (Object-Relational Mapping) integrado, mas você pode usar extensões populares como o SQLAlchemy para lidar com o banco de dados.</p>
 
@@ -256,7 +269,7 @@ class Task(db.Model):
     title = db.Column(db.String(100), nullable=False)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,  use_reloader=False)
 ```
 
 <h3>Extensões do Flask</h3>
@@ -278,14 +291,10 @@ pip install Flask-WTF Flask-Login Flask-Mail
 myapp/
 ├── app.py
 ├── templates/
-│   └── index.html
-├── static/
-└── venv/
+    └── index.html
 ```
 
-<p align="justify">&emsp;Este guia forneceu uma introdução básica ao desenvolvimento web com Flask, abrangendo endpoints CRUD, upload e download de arquivos, uso de decorators e wrappers. A partir daqui, você pode explorar mais recursos e aprofundar seus conhecimentos para criar aplicativos web mais complexos e completos com o Flask. Lembre-se de consultar a documentação oficial do Flask para mais informações detalhadas.</p>
-
-<h3>Recursos Adicionais</h3>
+<h3 id="recursos">Recursos Adicionais</h3>
 
 Além disso, para aprofundar seus conhecimentos, considere explorar:
 
@@ -295,20 +304,23 @@ Além disso, para aprofundar seus conhecimentos, considere explorar:
 - Blueprints: Organize seu aplicativo em módulos reutilizáveis chamados blueprints.
 - Segurança: Explore práticas recomendadas para proteger seu aplicativo contra vulnerabilidades comuns.
 
-<h2>Diferença entre API REST e RESTFULL</h2>
+<h2 id="teo">Diferença entre API REST e RESTFUL</h2>
 
-"API REST" e "API RESTful" são termos frequentemente usados para se referir a APIs que seguem os princípios da arquitetura REST (Representational State Transfer). Embora esses termos sejam muitas vezes usados de forma intercambiável, eles têm significados ligeiramente diferentes.
+<b>"API REST" e "API RESTful"</b> são termos frequentemente usados para se referir a APIs que seguem os princípios da arquitetura REST (Representational State Transfer). Embora esses termos sejam muitas vezes usados de forma intercambiável, eles têm significados ligeiramente diferentes.
 
-API REST (API Web RESTful):
+### API REST (API Web RESTful):
+
 Uma API REST (ou simplesmente API Web RESTful) é uma interface de programação de aplicativos que segue os princípios arquiteturais definidos pelo estilo de arquitetura REST. Uma API REST é projetada para permitir a comunicação entre sistemas distribuídos e, em muitos casos, é implementada usando protocolos HTTP. Ela utiliza os verbos HTTP (GET, POST, PUT, DELETE, etc.) para manipular recursos de forma uniforme.
 
-API RESTful:
+### API RESTful:
+
 O termo "API RESTful" é frequentemente usado para se referir a uma API que adere rigorosamente aos princípios do estilo de arquitetura REST. Uma API é considerada "RESTful" quando segue todas ou a maioria das características definidas por Roy Fielding em sua tese de doutorado (2000) sobre a arquitetura REST. Isso inclui, entre outros aspectos, a utilização correta dos métodos HTTP, a semântica correta dos códigos de status, a manipulação de recursos através de URLs, a ausência de estado (stateless), a utilização de hypermedia (HATEOAS) para a navegação entre recursos, entre outros princípios.
 
 Portanto, a diferença está principalmente na terminologia:
 
-API REST: Pode ser uma API que segue os princípios da arquitetura REST, mas pode não aderir estritamente a todos eles.
-API RESTful: É uma API que segue rigorosamente os princípios e práticas da arquitetura REST.
+<b>API REST:</b> Pode ser uma API que segue os princípios da arquitetura REST, mas pode não aderir estritamente a todos eles.
+
+<b>API RESTful:</b> É uma API que segue rigorosamente os princípios e práticas da arquitetura REST.
 Na prática, muitas vezes você ouvirá ambos os termos usados de maneira intercambiável para descrever APIs que utilizam os princípios da arquitetura REST, independentemente de aderirem estritamente a todos os detalhes.
 
 
