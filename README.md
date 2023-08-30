@@ -11,7 +11,7 @@
 
 <p align="justify">&emsp; Este guia tem como objetivo fornecer uma introdução prática ao desenvolvimento web utilizando o framework Flask em Python. Ele abordará conceitos básicos, criação de endpoints de CRUD (Create, Read, Update, Delete), upload e download de arquivos, uso de decorators e wrappers.</p>
 
-<h2 align="center">S U M M A R Y</h2>
+<h2 align="center">S U M A R I O</h2>
 <br>
 
 1. [Pré-requisitos](#pre)
